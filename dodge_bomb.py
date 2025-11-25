@@ -32,19 +32,26 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
 def gameover(screen: pg.Surface) -> None:
     go_img = pg.Surface((WIDTH, HEIGHT))
     pg.draw.rect(go_img,(0,0,0),(0,0,WIDTH,HEIGHT))
-    go_img.set_alpha(200)
-    font=pg.font.Font(None,80)
+    go_img.set_alpha(200)#  透過
+    font=pg.font.Font(None,80)#  文字
     txt=font.render("GAMEOVER",True,(255,255,255))
     go_img.blit(txt,[380,285])
     kk_go_img=pg.image.load("fig/8.png")
-    go_img.blit(kk_go_img,[320,280])
-    go_img.blit(kk_go_img,[725,280])
+    go_img.blit(kk_go_img,[320,280])#  
+    go_img.blit(kk_go_img,[725,280])#  
     screen.blit(go_img,[0,0])
     pg.display.update()
     time.sleep(5)
     
-    
-
+def init_bb_imgs()-> tuple[list[pg.Surface],list[int]]:
+    bb_imgs=[]
+    for r in range(1,11):
+        bb_img=pg.Surface((20*r,20*r))
+        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
+        bb_img.set_colorkey((0,0,0))
+        bb_imgs.append(bb_img)
+    bb_accs=[a for a in range(1,11)]#加速のリスト
+    return bb_accs,bb_imgs
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -62,6 +69,8 @@ def main():
     vx, vy = +5, +5  # 爆弾の横速度，縦速度
     clock = pg.time.Clock()
     tmr = 0
+    bb_accs,bb_imgs=init_bb_imgs()
+    
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -88,6 +97,8 @@ def main():
                 sum_mv[0] += mv[0]  # 横方向の移動量
                 sum_mv[1] += mv[1]  # 縦方向の移動量
         kk_rct.move_ip(sum_mv)
+        
+    
         if check_bound(kk_rct) != (True, True):  # 画面外なら
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  # 移動をなかったことにする
         screen.blit(kk_img, kk_rct)
@@ -96,7 +107,10 @@ def main():
             vx *= -1
         if not tate:  # 縦方向にはみ出ていたら
             vy *= -1
-        bb_rct.move_ip(vx, vy)
+        avx= vx*bb_accs[min(tmr//500,9)]
+        avy= vy*bb_accs[min(tmr//500,9)]
+        bb_img=bb_imgs[min(tmr//500,9)]
+        bb_rct.move_ip(avx, avy)
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
