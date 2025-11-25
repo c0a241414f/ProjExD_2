@@ -23,7 +23,6 @@ def main():
     kk_rct.center = 300, 200
     clock = pg.time.Clock()
     bb_img=pg.Surface((20,20))
-    bb_img
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
     bb_rct= bb_img.get_rect()
     bb_rct.center=random.randint(0,WIDTH),random.randint(0,HEIGHT)
