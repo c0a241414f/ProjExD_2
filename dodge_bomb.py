@@ -29,28 +29,28 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
-def gameover(screen: pg.Surface) -> None:
+def gameover(screen: pg.Surface) -> None:#ゲームオーバーの画面表示
     go_img = pg.Surface((WIDTH, HEIGHT))
-    pg.draw.rect(go_img,(0,0,0),(0,0,WIDTH,HEIGHT))
+    pg.draw.rect(go_img, (0 ,0 , 0), (0, 0, WIDTH, HEIGHT))
     go_img.set_alpha(200)#  透過
-    font=pg.font.Font(None,80)#  文字
-    txt=font.render("GAMEOVER",True,(255,255,255))
-    go_img.blit(txt,[380,285])
+    font=pg.font.Font(None, 80)#  文字
+    txt=font.render("GAMEOVER", True, (255, 255, 255))
+    go_img.blit(txt, [380, 285])
     kk_go_img=pg.image.load("fig/8.png")
-    go_img.blit(kk_go_img,[320,280])#  
-    go_img.blit(kk_go_img,[725,280])#  
-    screen.blit(go_img,[0,0])
+    go_img.blit(kk_go_img, [320, 280])#  
+    go_img.blit(kk_go_img, [725, 280])#  
+    screen.blit(go_img, [0, 0])
     pg.display.update()
     time.sleep(5)
     
-def init_bb_imgs()-> tuple[list[pg.Surface],list[int]]:
+def init_bb_imgs()-> tuple[list[pg.Surface],list[int]]:#爆弾の拡大加速の関数
     bb_imgs=[]
-    for r in range(1,11):
-        bb_img=pg.Surface((20*r,20*r))
-        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
-        bb_img.set_colorkey((0,0,0))
+    for r in range(1, 11):
+        bb_img=pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_img.set_colorkey((0, 0, 0))
         bb_imgs.append(bb_img)
-    bb_accs=[a for a in range(1,11)]#加速のリスト
+    bb_accs=[a for a in range(1, 11)]#加速のリスト
     return bb_accs,bb_imgs
 
 def main():
@@ -107,9 +107,9 @@ def main():
             vx *= -1
         if not tate:  # 縦方向にはみ出ていたら
             vy *= -1
-        avx= vx*bb_accs[min(tmr//500,9)]
-        avy= vy*bb_accs[min(tmr//500,9)]
-        bb_img=bb_imgs[min(tmr//500,9)]
+        avx= vx*bb_accs[min(tmr//500, 9)]
+        avy= vy*bb_accs[min(tmr//500, 9)]
+        bb_img=bb_imgs[min(tmr//500, 9)]
         bb_rct.move_ip(avx, avy)
         screen.blit(bb_img, bb_rct)
         pg.display.update()
